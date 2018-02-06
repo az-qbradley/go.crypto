@@ -130,10 +130,7 @@ func TestKeystoreRoundtrip(t *testing.T) {
 	testKek := []byte("Test kek, len 16")
 	testKey := []byte("I am an encrypted key.")
 
-	k := &Keystore{
-		make(map[string]string),
-		base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-."),
-	}
+	k := New(base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-."))
 	if _, err := k.Get("keyname", testKek); err == nil {
 		t.Errorf("Getting a non-existent key should fail")
 	}

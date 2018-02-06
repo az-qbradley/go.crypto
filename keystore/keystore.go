@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"log"
 )
 
 var (
@@ -25,10 +26,17 @@ type Keystore struct {
 }
 
 // New creates an instance of Keystore with base64.StdEncoding and empty keystore storage
-func New() *Keystore {
+func New(encodings ...*base64.Encoding) *Keystore {
+	encoding := base64.StdEncoding
+	if len(encodings) >= 1 && encodings[0] != nil {
+		encoding = encodings[0]
+		if len(encodings) > 1 {
+			log.Printf("Encoding entered is %v, only the 1st one is taken", len(encodings))
+		}
+	}
 	return &Keystore{
 		KS:             make(map[string]string),
-		Base64Encoding: base64.StdEncoding,
+		Base64Encoding: encoding,
 	}
 }
 
