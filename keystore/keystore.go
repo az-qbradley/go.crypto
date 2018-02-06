@@ -8,7 +8,6 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/containous/traefik/log"
 )
 
 var (
@@ -25,23 +24,12 @@ type Keystore struct {
 	Base64Encoding *base64.Encoding
 }
 
-// NewKeyStore creates an instance of Keystore, leave encoder blank for base64.StdEncoding
-func NewKeystore(ks map[string]string, encoder string) *Keystore {
-	encoding := base64.StdEncoding
-	if len(encoder) == 64 {
-		encoding = base64.NewEncoding(encoder)
-	} else if (len(encoder) != 0) {
-		log.Warn("invalid encoder length", len(encoder), "default encoder to base64.StdEncoding")
-	}
+// New creates an instance of Keystore with base64.StdEncoding and empty keystore storage
+func New() *Keystore {
 	return &Keystore{
-		KS:             ks,
-		Base64Encoding: encoding,
+		KS:             make(map[string]string),
+		Base64Encoding: base64.StdEncoding,
 	}
-}
-
-// NewStdEncodingKeystore creates an instance of Keystore with base64.StdEncoding
-func NewStdEncodingKeystore(ks map[string]string) *Keystore {
-	return NewKeystore(ks, "")
 }
 
 // Get gets a key from the Keystore. kek is the key encrypting key.
