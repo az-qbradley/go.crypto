@@ -130,7 +130,10 @@ func TestKeystoreRoundtrip(t *testing.T) {
 	testKek := []byte("Test kek, len 16")
 	testKey := []byte("I am an encrypted key.")
 
-	k := New(base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-."))
+	k := &Keystore {
+		make(map[string]string),
+		base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-."),
+	}
 	if _, err := k.Get("keyname", testKek); err == nil {
 		t.Errorf("Getting a non-existent key should fail")
 	}
@@ -161,7 +164,10 @@ func TestKeystoreGetError(t *testing.T) {
 		{keyname: "present", kek: []byte("012345678901234-")},
 	}
 
-	k := New()
+	k := &Keystore {
+		make(map[string]string),
+		base64.StdEncoding,
+	}
 	if err := k.Set("present", []byte("test"), []byte("0123456789012345")); err != nil {
 		t.Fatalf("Failed to set up keystore Get error test case: %v", err)
 	}
@@ -186,7 +192,7 @@ func TestKeystoreSetError(t *testing.T) {
 
 	k := &Keystore{
 		make(map[string]string),
-		base64.StdEncoding,
+		base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"),
 	}
 	for _, tt := range setErr {
 		if err := k.Set(tt.keyname, tt.keyvalue, tt.kek); err == nil {
